@@ -18,7 +18,7 @@ function unilives_videostream_load_widgets() {
 
 //OPTIONS
 // number of posts
-// width of thumbnails
+// height of thumbnails
 class UniLivesVideostreamWidget extends WP_Widget {
   function UniLivesVideostreamWidget() {
       /* Widget settings. */
@@ -43,8 +43,11 @@ class UniLivesVideostreamWidget extends WP_Widget {
       'meta_key' => "video-thumb",
       'posts_per_page' => $instance['show'] 
     ));
-    if( $videoposts->have_posts() ) {
-      while ($videoposts->have_posts()) : 
+    if( $videoposts->have_posts() ) {?>
+
+<div class="unilives_video_widget">
+
+<?php while ($videoposts->have_posts()) : 
         $post = $videoposts->the_post();
         $url = get_post_meta(get_the_ID(), 'video-thumb', true);
         if($url=='' || $url==null){ continue;}
@@ -55,11 +58,11 @@ class UniLivesVideostreamWidget extends WP_Widget {
         $university = get_post_meta(get_the_ID(), 'video-university', true);
         $location = get_post_meta(get_the_ID(), 'video-location', true);
 ?>
-<a href="<?php the_permalink();?>"><div class="unilives_video"><img src="<?php echo $url ?>" height=<?php echo  $instance['height']?>/><div class="unilives_video_info"><div class="unilives_video_title"><?php the_title();?></div><div class="unilives_video_author"><?php echo $author?></div><div class="unilives_video_duration"><?php echo $duration?></div><div class="unilives_video_university"><?php echo $university?></div><div class="unilives_video_location"><?php echo $location?></div><div class=""><?php the_excerpt();?></div></div></div></a>
-<?
-      endwhile;
-    }
+<a href="<?php the_permalink();?>" class="unilives_video_link"><div class="unilives_video"><img src="<?php echo $url ?>" height=<?php echo  $instance['height']?>/><div class="unilives_video_info"><div class="unilives_video_title"><?php the_title();?></div><div class="unilives_video_author"><?php echo $author?></div><div class="unilives_video_duration"><?php echo $duration?></div><div class="unilives_video_university"><?php echo $university?></div><div class="unilives_video_location"><?php echo $location?></div><div class="unilives_video_excerpt"><?php the_excerpt();?></div></div></div></a>
+<?php    endwhile;?>
 
+</div><?php
+    }
     echo $after_widget;
     return $instance;
   }
