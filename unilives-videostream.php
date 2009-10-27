@@ -26,6 +26,15 @@ class UniLivesVideostreamWidget extends WP_Widget {
       /* Create the widget. */
     $this->WP_Widget( 'unilives-videostream-widget', 'UniLives Videostream Widget', $widget_ops);
   }
+
+  public static function get_video_category_link(){
+   $category_ids = get_all_category_ids();
+    foreach($category_ids as $cat_id) {
+      if(!strcmp(get_cat_name($cat_id),"video")){
+        echo get_category_link($cat_id);
+      }
+    }
+  }
 	
   function widget( $args, $instance ) {
     extract( $args );
@@ -62,7 +71,7 @@ class UniLivesVideostreamWidget extends WP_Widget {
 <?php    endwhile;?>
 <div class="unilives_video_widget_separator">
 </div>
-<div class="unilives_video_widget_title"><?php echo $title?></div>
+<div class="unilives_video_widget_title"><?php echo $title?> (<a href="<?php echo $instance['all videos'];?>">all videos</a> )</div>
 
 </div><?php
     }
@@ -72,7 +81,7 @@ class UniLivesVideostreamWidget extends WP_Widget {
  
   // cribbed from the twitter widget, my this is a disaster waiting to happen, especially the display of forms
   function form( $instance ) {
-    $instance = wp_parse_args( (array) $instance, array('title' => '', 'show' => '4', 'height' => '100') );
+    $instance = wp_parse_args( (array) $instance, array('title' => '', 'show' => '4', 'height' => '100', 'all videos'=>'/category/video/') );
     $title = esc_attr($instance['title']);
     $show = absint($instance['show']);
     if ( $show < 1 || 20 < $show )
@@ -80,6 +89,7 @@ class UniLivesVideostreamWidget extends WP_Widget {
     $height = absint($instance['height']);
     if ( $height < 1 || 300 < $height )
       $heigh = '100';
+    $all_videos = $instance['all videos'];
 
     echo '<p><label for="' . $this->get_field_id('title') . '">' . __('Title:') . '
           <input class="widefat" id="' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') . '" type="text" value="' . $title . '" />
@@ -93,7 +103,11 @@ class UniLivesVideostreamWidget extends WP_Widget {
           </label></p>
           <p><label for="' . $this->get_field_id('height') . '">' . __('Common height of thumbnails:') . '
           <input class="widefat" id="' . $this->get_field_id('height') . '" name="' . $this->get_field_name('height') . '" type="text" value="' . $height . '" />
+          </label></p>
+          <p><label for="' . $this->get_field_id('all videos') . '">' . __('URI of "all videos" link:') . '
+          <input class="widefat" id="' . $this->get_field_id('all videos') . '" name="' . $this->get_field_name('all videos') . '" type="text" value="' . $all_videos . '" />
           </label></p>';
+
          
   }
 }
